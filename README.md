@@ -1,2 +1,2 @@
-# content-controller
+# Content Controller
 Content API Controller
