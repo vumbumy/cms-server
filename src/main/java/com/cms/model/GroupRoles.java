@@ -1,9 +1,11 @@
 package com.cms.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 
 
@@ -17,7 +19,7 @@ public class GroupRoles {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long id;
+    private Long id;
 
     @OneToOne
     private Group group;
@@ -25,6 +27,18 @@ public class GroupRoles {
     @ElementCollection
     @CollectionTable(name = "roles")
     private Collection<Role> roles;
+
+    public GroupRoles(Group group, Role role) {
+        this.group = group;
+        this.addRole(role);
+    }
+
+    public Boolean addRole(Role role){
+        if(this.roles == null)
+            this.roles = new ArrayList<>();
+
+        return this.roles.add(role);
+    }
 
     @NoArgsConstructor
     public enum Role {

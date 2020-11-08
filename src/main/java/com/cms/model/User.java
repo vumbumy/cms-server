@@ -3,44 +3,67 @@ package com.cms.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
 @Entity
 @Data
+//@NoArgsConstructor
 @Table(name="users")
 public class User implements Serializable, UserDetails {
 
 	private static final long serialVersionUID = 1L;
-	public User() {}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Long id;
+	private Long id;
 
 	@Column(unique=true, nullable = false)
-	public String email;
+	@Email
+	private String email;
 
 	@JsonIgnore
 	@JsonSetter
 	@Column(nullable = false)
-	public String password = "P@ssw0rd";
+	private String password = "P@ssw0rd";
 
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinTable(
-			name = "user_group_roles",
-			joinColumns = @JoinColumn(
-					name = "user_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(
-					name = "group_roles_id", referencedColumnName = "id"))
+	@JoinTable(name = "user_group_roles",
+			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "group_roles_id", referencedColumnName = "id"))
 	@Column(nullable = false)
 	private Collection<GroupRoles> groupRolesList;
+
+	public Boolean addGroupRoles(GroupRoles groupRoles){
+		if(this.groupRolesList == null){
+			this.groupRolesList = new HashSet<>();
+		}
+
+		return this.groupRolesList.add(groupRoles);
+	}
+
+	@JsonIgnore
+	public HashMap<Group, Collection<GroupRoles.Role>> groupListMap(){
+		HashMap<Group, Collection<GroupRoles.Role>> groupListMap = new HashMap<>();
+
+		for(GroupRoles groupRoles : this.groupRolesList){
+			groupListMap.put(groupRoles.getGroup(), groupRoles.getRoles());
+		}
+
+		return groupListMap;
+	}
+
+	@JsonIgnore
+	public Set<Group> getGroups(){
+		return this.groupListMap().keySet();
+	}
 
 	@JsonIgnore
 	@Override
@@ -77,4 +100,12 @@ public class User implements Serializable, UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+
+//	@JsonIgnore
+//	public boolean equals(User user){
+//		if(user == null)
+//			return false;
+//
+//		return this.id.equals(user.id);
+//	}
 }
