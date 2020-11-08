@@ -1,4 +1,4 @@
-package model;
+package com.cms.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
@@ -31,6 +31,16 @@ public class User implements Serializable, UserDetails {
 	@JsonSetter
 	@Column(nullable = false)
 	public String password = "P@ssw0rd";
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinTable(
+			name = "user_group_roles",
+			joinColumns = @JoinColumn(
+					name = "user_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(
+					name = "group_roles_id", referencedColumnName = "id"))
+	@Column(nullable = false)
+	private Collection<GroupRoles> groupRolesList;
 
 	@JsonIgnore
 	@Override

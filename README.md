@@ -1,2 +1,2 @@
-# Content Controller
-Content API Controller
+# CMS
+Content Management Service
