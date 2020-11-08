@@ -2,6 +2,7 @@ package com.cms.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,7 +16,7 @@ import java.util.*;
 
 @Entity
 @Data
-//@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="users")
 public class User implements Serializable, UserDetails {
 
@@ -34,6 +35,10 @@ public class User implements Serializable, UserDetails {
 	@Column(nullable = false)
 	private String password = "P@ssw0rd";
 
+	public User(String email){
+		this.email = email;
+	}
+
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "user_group_roles",
 			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -50,9 +55,11 @@ public class User implements Serializable, UserDetails {
 	}
 
 	@JsonIgnore
-	public HashMap<Group, Collection<GroupRoles.Role>> groupListMap(){
-		HashMap<Group, Collection<GroupRoles.Role>> groupListMap = new HashMap<>();
+	public HashMap<Group, Collection<GroupRoles.Role>> getGroupListMap(){
+		if(this.groupRolesList == null)
+			return null;
 
+		HashMap<Group, Collection<GroupRoles.Role>> groupListMap = new HashMap<>();
 		for(GroupRoles groupRoles : this.groupRolesList){
 			groupListMap.put(groupRoles.getGroup(), groupRoles.getRoles());
 		}
@@ -61,8 +68,25 @@ public class User implements Serializable, UserDetails {
 	}
 
 	@JsonIgnore
+	public Boolean isSuperAdmin(){
+		if(this.groupRolesList == null)
+			return false;
+
+		for(GroupRoles groupRoles : this.groupRolesList){
+			if(groupRoles.roleContains(GroupRoles.Role.SUPER_ADMIN))
+				return true;
+		}
+
+		return false;
+	}
+
+	@JsonIgnore
 	public Set<Group> getGroups(){
-		return this.groupListMap().keySet();
+		HashMap<Group, Collection<GroupRoles.Role>> groupListMap = this.getGroupListMap();
+		if(groupListMap == null)
+			return null;
+
+		return groupListMap.keySet();
 	}
 
 	@JsonIgnore

@@ -1,6 +1,7 @@
 package com.cms.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,7 +15,7 @@ import java.util.Collection;
 
 @Entity
 @Data
-@NoArgsConstructor
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="contents")
 public class Content {
 	@Id

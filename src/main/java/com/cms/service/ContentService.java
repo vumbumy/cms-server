@@ -20,7 +20,10 @@ public class ContentService {
         Collection<Permission> permissionList = content.getPermissions();
 
         for(Permission permission : permissionList){
-            if(user.equals(permission.getUser()) || user.getGroups().contains(permission.getGroup()))
+            if(user.equals(permission.getUser()))
+                return permission.isReadable();
+
+            if(user.getGroups() != null && user.getGroups().contains(permission.getGroup()))
                 return permission.isReadable();
         }
 
@@ -31,7 +34,10 @@ public class ContentService {
         Collection<Permission> permissionList = content.getPermissions();
 
         for(Permission permission : permissionList){
-            if(user.equals(permission.getUser()) || user.getGroups().contains(permission.getGroup()))
+            if(user.equals(permission.getUser()))
+                return permission.isWriteable();
+
+            if(user.getGroups() != null && user.getGroups().contains(permission.getGroup()))
                 return permission.isWriteable();
         }
 

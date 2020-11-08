@@ -40,6 +40,13 @@ public class GroupRoles {
         return this.roles.add(role);
     }
 
+    public Boolean roleContains(Role role){
+        if(this.roles == null)
+            return false;
+
+        return this.roles.contains(role);
+    }
+
     @NoArgsConstructor
     public enum Role {
         USER(),
