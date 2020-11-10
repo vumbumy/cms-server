@@ -1,6 +1,7 @@
 package com.cms.model;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,9 +11,12 @@ import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Data
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="groups")
 public class Group{
+	public static final Long PUBLIC_ID = 1L;
+	public static final String PUBLIC_NAME = "PUBLIC";
 
 	private static final long serialVersionUID = 1L;
 

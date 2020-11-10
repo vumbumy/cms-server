@@ -40,12 +40,29 @@ public class User implements Serializable, UserDetails {
 		this.email = email;
 	}
 
+	public User(String email, GroupRoles groupRoles){
+		this.email = email;
+		this.groupRolesList = Collections.singleton(groupRoles);
+	}
+
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "user_group_roles",
 			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "group_roles_id", referencedColumnName = "id"))
 	@Column(nullable = false)
-	private Collection<GroupRoles> groupRolesList;
+	private Set<GroupRoles> groupRolesList;
+
+	public Boolean containsGroup(Group group){
+		if(this.groupRolesList == null || this.groupRolesList.isEmpty())
+			return true;
+
+		for(GroupRoles groupRoles : this.groupRolesList){
+			if(groupRoles.isEqualGroup(group))
+				return true;
+		}
+
+		return false;
+	}
 
 	public Boolean addGroup(Group group){
 		if(this.groupRolesList == null){

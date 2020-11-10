@@ -11,7 +11,6 @@ import java.util.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="group_roles")
 public class GroupRoles {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -22,7 +21,6 @@ public class GroupRoles {
     private Group group;
 
     @ElementCollection
-    @Getter
     @CollectionTable(name = "roles")
     private Set<Role> roles;
 

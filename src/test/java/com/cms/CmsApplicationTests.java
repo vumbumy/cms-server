@@ -2,6 +2,7 @@ package com.cms;
 
 import com.cms.model.*;
 import com.cms.service.ContentService;
+import com.cms.service.GroupService;
 import com.cms.service.UserService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -19,24 +20,18 @@ import static org.junit.Assert.*;
 class CmsApplicationTests {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@Autowired
-	UserService userService;
-
-	@Autowired
-	ContentService contentService;
-
-	static Group defaultGroup;
+//	static Group defaultGroup;
 	static Group aGroup;
 	static Group bGroup;
 
-	static GroupRoles SuperAdminRole;
-	static GroupRoles aGroupAdminRole;
-	static GroupRoles aGroupAdvertiserRole;
+	static GroupRoles publicGroupRoles;
+//	static GroupRoles aGroupAdminRole;
+//	static GroupRoles aGroupAdvertiserRole;
 
 	static User superAdminUser;
 	static User aGroupAdminUser;
 	static User bUser;
-	static User cUser;
+//	static User cUser;
 
 	static Content aContent;
 
@@ -45,13 +40,10 @@ class CmsApplicationTests {
 		aGroup = new Group("A");
 		bGroup = new Group("B");
 
-//		aGroupAdminRole = new GroupRoles(aGroup, GroupRoles.Role.ADMIN);
-//		aGroupAdvertiserRole = new GroupRoles(aGroup, GroupRoles.Role.ADVERTISER);
-
 		aGroupAdminUser = new User("aGroupAdminUser");
 
 		bUser = new User("bUser");
-		cUser = new User("cUser");
+//		cUser = new User("cUser");
 
 		aContent = new Content();
 
@@ -83,25 +75,5 @@ class CmsApplicationTests {
 
 		assertTrue(aContent.addPermission(aUserWritePermission));
 		assertTrue(aContent.addPermission(aGroupReadPermission));
-
-		assertTrue(contentService.isWritable(aContent, aGroupAdminUser));
-		assertTrue(contentService.isReadable(aContent, bUser));
-
-		assertFalse(contentService.isReadable(aContent, cUser));
-	}
-
-	@Test
-	void groupAdminTest(){
-		assertTrue(userService.isGroupAdmin(aGroupAdminUser, aGroup));
-
-		HashMap<Group, Collection<GroupRoles.Role>> aGroupAdminRolesMap = aGroupAdminUser.getGroupListMap();
-//		for(Group key : aGroupAdminRolesMap.keySet()){
-//			logger.info(key.getName());
-//		}
-
-		assertFalse(aGroupAdminRolesMap.containsKey(bGroup));
-		assertNull(aGroupAdminRolesMap.get(bGroup));
-
-		assertFalse(userService.isGroupAdmin(aGroupAdminUser, bGroup));
 	}
 }

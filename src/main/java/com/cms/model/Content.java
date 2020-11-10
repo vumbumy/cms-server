@@ -49,4 +49,8 @@ public class Content {
 
 		return this.permissions.add(permission);
 	}
+
+	public Boolean deletePermission(Permission permission){
+		return this.permissions.remove(permission);
+	}
 }

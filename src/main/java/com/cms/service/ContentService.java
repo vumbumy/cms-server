@@ -1,6 +1,7 @@
 package com.cms.service;
 
 import com.cms.model.Content;
+import com.cms.model.Group;
 import com.cms.model.Permission;
 import com.cms.model.User;
 import com.cms.repository.PermissionRepository;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ContentService {
@@ -19,11 +21,12 @@ public class ContentService {
     public Boolean isReadable(Content content, User user){
         Collection<Permission> permissionList = content.getPermissions();
 
+        Set<Group> userGroups = user.getGroups();
         for(Permission permission : permissionList){
             if(user.equals(permission.getUser()))
                 return permission.isReadable();
 
-            if(user.getGroups() != null && user.getGroups().contains(permission.getGroup()))
+            if(userGroups != null && userGroups.contains(permission.getGroup()))
                 return permission.isReadable();
         }
 
@@ -33,11 +36,12 @@ public class ContentService {
     public Boolean isWritable(Content content, User user){
         Collection<Permission> permissionList = content.getPermissions();
 
+        Set<Group> userGroups = user.getGroups();
         for(Permission permission : permissionList){
             if(user.equals(permission.getUser()))
                 return permission.isWriteable();
 
-            if(user.getGroups() != null && user.getGroups().contains(permission.getGroup()))
+            if(userGroups != null && userGroups.contains(permission.getGroup()))
                 return permission.isWriteable();
         }
 
