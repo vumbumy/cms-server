@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Null;
 import java.io.Serializable;
 import java.util.*;
 
@@ -59,6 +60,18 @@ public class User implements Serializable, UserDetails {
 		return this.groupRolesList.add(
 				new GroupRoles(group)
 		);
+	}
+
+	public Set<GroupRoles.Role> getGroupRoles(Group group){
+		if(this.groupRolesList == null)
+			return null;
+
+		for(GroupRoles groupRoles : this.groupRolesList){
+			if(groupRoles.isEqualGroup(group))
+				return groupRoles.getRoles();
+		}
+
+		return null;
 	}
 
 	public Boolean addGroupRole(Group group, GroupRoles.Role role){

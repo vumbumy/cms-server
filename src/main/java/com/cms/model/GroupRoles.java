@@ -1,14 +1,9 @@
 package com.cms.model;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 
 @Entity
@@ -27,8 +22,9 @@ public class GroupRoles {
     private Group group;
 
     @ElementCollection
+    @Getter
     @CollectionTable(name = "roles")
-    private Collection<Role> roles;
+    private Set<Role> roles;
 
     public GroupRoles(Group group) {
         this.group = group;
@@ -49,7 +45,7 @@ public class GroupRoles {
 
     public Boolean addRole(Role role){
         if(this.roles == null)
-            this.roles = new ArrayList<>();
+            this.roles = new HashSet<>();
 
         return this.roles.add(role);
     }
