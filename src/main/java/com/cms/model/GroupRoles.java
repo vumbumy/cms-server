@@ -1,5 +1,6 @@
 package com.cms.model;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,11 +8,12 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 
 @Entity
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="group_roles")
 public class GroupRoles {
 
@@ -28,9 +30,21 @@ public class GroupRoles {
     @CollectionTable(name = "roles")
     private Collection<Role> roles;
 
-    public GroupRoles(Group group, Role role) {
+    public GroupRoles(Group group) {
         this.group = group;
-        this.addRole(role);
+        this.addRole(Role.USER);
+    }
+
+    public GroupRoles(Group group, List<Role> roles) {
+        this.group = group;
+        this.addRole(Role.USER);
+        for(Role role : roles){
+            this.addRole(role);
+        }
+    }
+
+    public Boolean isEqualGroup(Group group){
+        return this.group.equals(group);
     }
 
     public Boolean addRole(Role role){

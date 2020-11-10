@@ -46,12 +46,35 @@ public class User implements Serializable, UserDetails {
 	@Column(nullable = false)
 	private Collection<GroupRoles> groupRolesList;
 
-	public Boolean addGroupRoles(GroupRoles groupRoles){
+	public Boolean addGroup(Group group){
 		if(this.groupRolesList == null){
 			this.groupRolesList = new HashSet<>();
 		}
 
-		return this.groupRolesList.add(groupRoles);
+		for(GroupRoles groupRoles : this.groupRolesList){
+			if(groupRoles.isEqualGroup(group))
+				return true;
+		}
+
+		return this.groupRolesList.add(
+				new GroupRoles(group)
+		);
+	}
+
+	public Boolean addGroupRole(Group group, GroupRoles.Role role){
+		if(this.groupRolesList == null){
+			this.groupRolesList = new HashSet<>();
+		}
+
+		for(GroupRoles groupRoles : this.groupRolesList){
+			if(groupRoles.isEqualGroup(group)) {
+				return groupRoles.addRole(role);
+			}
+		}
+
+		return this.groupRolesList.add(
+				new GroupRoles(group)
+		);
 	}
 
 	@JsonIgnore

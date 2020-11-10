@@ -45,8 +45,8 @@ class CmsApplicationTests {
 		aGroup = new Group("A");
 		bGroup = new Group("B");
 
-		aGroupAdminRole = new GroupRoles(aGroup, GroupRoles.Role.ADMIN);
-		aGroupAdvertiserRole = new GroupRoles(aGroup, GroupRoles.Role.ADVERTISER);
+//		aGroupAdminRole = new GroupRoles(aGroup, GroupRoles.Role.ADMIN);
+//		aGroupAdvertiserRole = new GroupRoles(aGroup, GroupRoles.Role.ADVERTISER);
 
 		aGroupAdminUser = new User("aGroupAdminUser");
 
@@ -55,8 +55,8 @@ class CmsApplicationTests {
 
 		aContent = new Content();
 
-		assertTrue(aGroupAdminUser.addGroupRoles(aGroupAdminRole));
-		assertTrue(bUser.addGroupRoles(aGroupAdvertiserRole));
+		assertTrue(aGroupAdminUser.addGroupRole(aGroup, GroupRoles.Role.ADMIN));
+		assertTrue(bUser.addGroupRole(aGroup, GroupRoles.Role.ADVERTISER));
 	}
 
 	@Test
