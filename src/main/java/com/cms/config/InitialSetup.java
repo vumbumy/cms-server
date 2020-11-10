@@ -28,6 +28,7 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
         logger.info("-------------------- onApplicationEvent --------------------");
+        logger.info(org.hibernate.Version.getVersionString());
 
         Group publicGroup = makePublicGroupIfNotExist();
     }

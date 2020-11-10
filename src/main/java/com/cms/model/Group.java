@@ -12,7 +12,7 @@ import javax.validation.constraints.NotEmpty;
 @Entity
 @Data
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="groups")
 public class Group{
 	public static final Long PUBLIC_ID = 1L;
@@ -25,7 +25,6 @@ public class Group{
 	private Long id;
 
 	@Column(nullable = false)
-	@NotEmpty
 	private String name;
 
 	public Group(String name){
