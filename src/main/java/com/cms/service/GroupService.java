@@ -7,10 +7,7 @@ import com.cms.repository.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class GroupService {
@@ -26,6 +23,8 @@ public class GroupService {
     public GroupRoles getPublicGroupRoles(){
         Group publicGroup = getPublicGroup();
 
-        return new GroupRoles(publicGroup, Collections.singletonList(GroupRoles.Role.USER));
+        Set<GroupRoles.Role> roles = new HashSet<>(Collections.singletonList(GroupRoles.Role.USER));
+
+        return new GroupRoles(publicGroup, roles);
     }
 }

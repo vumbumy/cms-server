@@ -34,21 +34,11 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
     }
 
     private Group makePublicGroupIfNotExist() {
-//        Group publicGroup = null;
+        Group publicGroup = null;
 
-//        Optional<Group> optionalGroup = groupRepository.findById(Group.PUBLIC_ID);
-//        publicGroup = optionalGroup.orElseGet(() -> groupRepository.save(
-//                new Group(Group.PUBLIC_ID, Group.PUBLIC_NAME)
-//        ));
-
-        Group publicGroup = groupRepository.getOne(Group.PUBLIC_ID);
-        if(publicGroup == null) {
-            publicGroup = new Group(Group.PUBLIC_ID, Group.PUBLIC_NAME);
-        }
-//        publicGroup = optionalGroup.orElseGet(() -> groupRepository.save(
-//                new Group(Group.PUBLIC_ID, Group.PUBLIC_NAME)
-//        ));
-
-        return publicGroup;
+        Optional<Group> optionalGroup = groupRepository.findById(Group.PUBLIC_ID);
+        return optionalGroup.orElseGet(() -> groupRepository.save(
+                new Group(Group.PUBLIC_ID, Group.PUBLIC_NAME)
+        ));
     }
 }

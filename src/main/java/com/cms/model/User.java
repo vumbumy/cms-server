@@ -42,7 +42,7 @@ public class User implements Serializable, UserDetails {
 
 	public User(String email, GroupRoles groupRoles){
 		this.email = email;
-		this.groupRolesList = Collections.singleton(groupRoles);
+		this.groupRolesList = new HashSet<>(Collections.singleton(groupRoles));
 	}
 
 	@OneToMany(cascade = CascadeType.ALL)
@@ -50,7 +50,7 @@ public class User implements Serializable, UserDetails {
 			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "group_roles_id", referencedColumnName = "id"))
 	@Column(nullable = false)
-	private Set<GroupRoles> groupRolesList;
+	private Collection<GroupRoles> groupRolesList;
 
 	public Boolean containsGroup(Group group){
 		if(this.groupRolesList == null || this.groupRolesList.isEmpty())
@@ -74,9 +74,7 @@ public class User implements Serializable, UserDetails {
 				return true;
 		}
 
-		return this.groupRolesList.add(
-				new GroupRoles(group)
-		);
+		return this.groupRolesList.add(new GroupRoles(group));
 	}
 
 	public Set<GroupRoles.Role> getGroupRoles(Group group){

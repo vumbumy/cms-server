@@ -29,7 +29,7 @@ public class GroupRoles {
         this.addRole(Role.USER);
     }
 
-    public GroupRoles(Group group, List<Role> roles) {
+    public GroupRoles(Group group, Set<Role> roles) {
         this.group = group;
         this.addRole(Role.USER);
         for(Role role : roles){

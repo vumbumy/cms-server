@@ -40,36 +40,31 @@ class ServiceTests {
 		GroupRoles publicGroupRoles = groupService.getPublicGroupRoles();
 
 		User aGroupAdminUser = new User("aGroupAdminUser", publicGroupRoles);
+		assertEquals(aGroupAdminUser.getGroupRolesList().size(), 1);
+
 		User bUser = new User("bUser", publicGroupRoles);
+		assertTrue(bUser.addGroup(aGroup));
+		assertNotNull(bUser.getGroupRolesList());
+
 		User cUser = new User("cUser", publicGroupRoles);
+		assertEquals(cUser.getGroupRolesList().size(), 1);
 
 		Permission publicPermission = new Permission(null, publicGroup, Permission.AccessRights.READ_RIGHT);
 		Permission aUserWritePermission = new Permission(aGroupAdminUser, null, Permission.AccessRights.WRITE_RIGHT);
 		Permission aGroupReadPermission = new Permission(null, aGroup, Permission.AccessRights.READ_RIGHT);
 
 		Content aContent = new Content();
-
 		assertTrue(aContent.addPermission(aUserWritePermission));
 		assertTrue(aContent.addPermission(aGroupReadPermission));
 
 		Content bContent = new Content();
 		assertTrue(bContent.addPermission(publicPermission));
 
-		assertNotNull(bUser.getGroupRolesList());
-		assertEquals(bUser.getGroupRolesList().size(), 1);
+		assertTrue(contentService.isWritable(aContent, aGroupAdminUser));
+		assertTrue(contentService.isReadable(aContent, bUser));
 
-//		for(GroupRoles groupRoles : bUser.getGroupRolesList()){
-//			logger.info(groupRoles.getGroup().getName());
-//		}
-
-//		HashMap<Group, Collection<GroupRoles.Role>> bUserGroupListMap = bUser.getGroupListMap();
-//		assertEquals(bUserGroupListMap.size(), 1);
-
-//		assertTrue(contentService.isWritable(aContent, aGroupAdminUser));
-//		assertTrue(contentService.isReadable(aContent, bUser));
-
-//		assertFalse(contentService.isReadable(aContent, cUser));
-//		assertTrue(contentService.isReadable(bContent, cUser));
+		assertFalse(contentService.isReadable(aContent, cUser));
+		assertTrue(contentService.isReadable(bContent, cUser));
 	}
 
 	@Test
