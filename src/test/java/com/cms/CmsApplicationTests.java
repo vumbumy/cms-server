@@ -43,9 +43,8 @@ class CmsApplicationTests {
 		aGroupAdminUser = new User("aGroupAdminUser");
 
 		bUser = new User("bUser");
-//		cUser = new User("cUser");
 
-		aContent = new Content();
+		aContent = new Content("A", aGroupAdminUser);
 
 		assertTrue(aGroupAdminUser.addGroupRole(aGroup, GroupRoles.Role.ADMIN));
 

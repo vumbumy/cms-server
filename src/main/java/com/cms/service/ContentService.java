@@ -19,6 +19,9 @@ public class ContentService {
     PermissionRepository permissionRepository;
 
     public Boolean isReadable(Content content, User user){
+        if(content.isAuthor(user))
+            return true;
+
         Collection<Permission> permissionList = content.getPermissions();
 
         Set<Group> userGroups = user.getGroups();
@@ -34,6 +37,9 @@ public class ContentService {
     }
 
     public Boolean isWritable(Content content, User user){
+        if(content.isAuthor(user))
+            return true;
+
         Collection<Permission> permissionList = content.getPermissions();
 
         Set<Group> userGroups = user.getGroups();

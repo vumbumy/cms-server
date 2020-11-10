@@ -31,40 +31,50 @@ class ServiceTests {
 
 	@Test
 	void permissionTest() {
+		// TODO: Get/Set Test와 Service Test를 분명하게 분리해서 관리할 필요가 있음.
+
 		Group publicGroup = groupService.getPublicGroup();
 		assertNotNull(publicGroup);
 		assertEquals(publicGroup.getName(), Group.PUBLIC_NAME);
 
 		Group aGroup = new Group("A");
 
-		GroupRoles publicGroupRoles = groupService.getPublicGroupRoles();
+//		GroupRoles publicGroupRoles = groupService.getPublicGroupRoles();
 
-		User aGroupAdminUser = new User("aGroupAdminUser", publicGroupRoles);
+		User aGroupAdminUser = new User("aGroupAdminUser", publicGroup);
 		assertEquals(aGroupAdminUser.getGroupRolesList().size(), 1);
 
-		User bUser = new User("bUser", publicGroupRoles);
+		User bUser = new User("bUser", publicGroup);
 		assertTrue(bUser.addGroup(aGroup));
 		assertNotNull(bUser.getGroupRolesList());
+		assertEquals(bUser.getGroupRolesList().size(), 2);
 
-		User cUser = new User("cUser", publicGroupRoles);
+		User cUser = new User("cUser", publicGroup);
 		assertEquals(cUser.getGroupRolesList().size(), 1);
 
 		Permission publicPermission = new Permission(null, publicGroup, Permission.AccessRights.READ_RIGHT);
-		Permission aUserWritePermission = new Permission(aGroupAdminUser, null, Permission.AccessRights.WRITE_RIGHT);
+		Permission bUserWritePermission = new Permission(bUser, null, Permission.AccessRights.WRITE_RIGHT);
 		Permission aGroupReadPermission = new Permission(null, aGroup, Permission.AccessRights.READ_RIGHT);
 
-		Content aContent = new Content();
-		assertTrue(aContent.addPermission(aUserWritePermission));
+		Content aContent = new Content("A", aGroupAdminUser);
 		assertTrue(aContent.addPermission(aGroupReadPermission));
 
-		Content bContent = new Content();
-		assertTrue(bContent.addPermission(publicPermission));
+		Content bContent = new Content("B", aGroupAdminUser);
+		assertTrue(bContent.addPermission(bUserWritePermission));
+
+		Content cContent = new Content("C", aGroupAdminUser);
+		assertTrue(cContent.addPermission(publicPermission));
 
 		assertTrue(contentService.isWritable(aContent, aGroupAdminUser));
+		assertTrue(contentService.isReadable(bContent, aGroupAdminUser));
+
+		assertFalse(contentService.isWritable(aContent, bUser));
 		assertTrue(contentService.isReadable(aContent, bUser));
+		assertTrue(contentService.isWritable(bContent, bUser));
 
 		assertFalse(contentService.isReadable(aContent, cUser));
-		assertTrue(contentService.isReadable(bContent, cUser));
+		assertFalse(contentService.isReadable(bContent, cUser));
+		assertTrue(contentService.isReadable(cContent, cUser));
 	}
 
 	@Test

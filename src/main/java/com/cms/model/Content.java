@@ -15,7 +15,7 @@ import java.util.Collection;
 
 @Entity
 @Data
-//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="contents")
 public class Content {
 	@Id
@@ -28,6 +28,15 @@ public class Content {
 	@Column
 	@NotEmpty
 	private String name;
+
+	public Content(String name, User author){
+		this.name = name;
+		this.author = author;
+	}
+
+	public Boolean isAuthor(User user){
+		return this.author.equals(user);
+	}
 
 	@CreationTimestamp
 	private LocalDateTime createDateTime;

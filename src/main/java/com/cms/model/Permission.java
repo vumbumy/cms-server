@@ -39,12 +39,12 @@ public class Permission {
         @Getter
         private Short value;
 
-        public Boolean isAccessRights(Short a){
-            return this.value <= a;
+        public Boolean isAccessRights(Short value){
+            return this.value >= value;
         }
 
-        public Boolean isAccessRights(AccessRights a){
-            return this.isAccessRights(a.value);
+        public Boolean isAccessRights(AccessRights rights){
+            return this.isAccessRights(rights.value);
         }
     }
 

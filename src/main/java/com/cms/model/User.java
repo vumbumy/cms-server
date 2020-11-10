@@ -40,9 +40,14 @@ public class User implements Serializable, UserDetails {
 		this.email = email;
 	}
 
-	public User(String email, GroupRoles groupRoles){
+	public User(String email, Group group){
 		this.email = email;
-		this.groupRolesList = new HashSet<>(Collections.singleton(groupRoles));
+		this.addGroup(group);
+	}
+
+	public User(String email, Group group, Set<GroupRoles.Role> roles){
+		this.email = email;
+		this.addGroupRoles(group, roles);
 	}
 
 	@OneToMany(cascade = CascadeType.ALL)
@@ -87,6 +92,26 @@ public class User implements Serializable, UserDetails {
 		}
 
 		return null;
+	}
+
+	private Boolean addGroupRoles(Group group, Set<GroupRoles.Role> roles) {
+		if(this.groupRolesList == null){
+			this.groupRolesList = new HashSet<>();
+		}
+
+		for(GroupRoles groupRoles : this.groupRolesList){
+			if(groupRoles.isEqualGroup(group)) {
+				for(GroupRoles.Role role : roles)
+					if(!groupRoles.addRole(role))
+						return false;
+
+				return true;
+			}
+		}
+
+		return this.groupRolesList.add(
+				new GroupRoles(group, roles)
+		);
 	}
 
 	public Boolean addGroupRole(Group group, GroupRoles.Role role){
