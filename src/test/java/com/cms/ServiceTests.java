@@ -1,5 +1,6 @@
 package com.cms;
 
+import com.cms.config.ConfigClass;
 import com.cms.model.*;
 import com.cms.service.ContentService;
 import com.cms.service.GroupService;
@@ -30,11 +31,14 @@ class ServiceTests {
 	@Autowired
 	ContentService contentService;
 
+	@Autowired
+	ConfigClass configClass;
+
 	@Test
 	void permissionTest() {
 		// TODO: Get/Set Test와 Service Test를 분명하게 분리해서 관리할 필요가 있음.
 
-		Group publicGroup = groupService.getPublicGroup();
+		Group publicGroup = configClass.getPublicGroup();
 		assertNotNull(publicGroup);
 		assertEquals(publicGroup.getName(), Group.PUBLIC_NAME);
 

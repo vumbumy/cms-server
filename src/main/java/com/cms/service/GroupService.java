@@ -11,20 +11,20 @@ import java.util.*;
 
 @Service
 public class GroupService {
-    @Autowired
-    GroupRepository groupRepository;
-
-    public Group getPublicGroup(){
-        Optional<Group> optionalGroup = groupRepository.findById(Group.PUBLIC_ID);
-
-        return optionalGroup.orElse(null);
-    }
-
-    public GroupRoles getPublicGroupRoles(){
-        Group publicGroup = getPublicGroup();
-
-        Set<GroupRoles.Role> roles = new HashSet<>(Collections.singletonList(GroupRoles.Role.USER));
-
-        return new GroupRoles(publicGroup, roles);
-    }
+//    @Autowired
+//    GroupRepository groupRepository;
+//
+//    public Group getPublicGroup(){
+//        Optional<Group> optionalGroup = groupRepository.findById(Group.PUBLIC_ID);
+//
+//        return optionalGroup.orElse(null);
+//    }
+//
+//    public GroupRoles getPublicGroupRoles(){
+//        Group publicGroup = getPublicGroup();
+//
+//        Set<GroupRoles.Role> roles = new HashSet<>(Collections.singletonList(GroupRoles.Role.USER));
+//
+//        return new GroupRoles(publicGroup, roles);
+//    }
 }

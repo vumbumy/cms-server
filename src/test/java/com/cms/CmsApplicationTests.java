@@ -54,11 +54,17 @@ class CmsApplicationTests {
 	@Test
 	void addGroupAndRoleTest(){
 		assertTrue(aGroupAdminUser.addGroup(aGroup));
+		assertTrue(aGroupAdminUser.containsGroup(aGroup));
 		assertEquals(aGroupAdminUser.getGroups().size(), 1);
+		assertEquals(aGroupAdminUser.getGroupRoles(aGroup).size(), 2);
+
+		assertTrue(bUser.containsGroup(aGroup));
 
 		assertTrue(bUser.addGroup(bGroup));
+		assertTrue(bUser.containsGroup(bGroup));
+
 		assertEquals(bUser.getGroups().size(), 2);
-		assertEquals(bUser.getGroupRoles(aGroup).size(), 1);
+		assertEquals(bUser.getGroupRoles(aGroup).size(), 2);
 
 		assertTrue(aGroupAdminUser.addGroupRole(aGroup, GroupRoles.Role.ADMIN));
 		assertEquals(aGroupAdminUser.getGroupRoles(aGroup).size(), 2);

@@ -12,10 +12,13 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Component
-public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> {
+public class ConfigClass implements ApplicationListener<ContextRefreshedEvent> {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -41,4 +44,20 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
                 new Group(Group.PUBLIC_ID, Group.PUBLIC_NAME)
         ));
     }
+
+    public Group getPublicGroup(){
+        Optional<Group> optionalGroup = groupRepository.findById(Group.PUBLIC_ID);
+
+        return optionalGroup.orElse(
+                makePublicGroupIfNotExist()
+        );
+    }
+
+//    public GroupRoles getPublicGroupRoles(){
+//        Group publicGroup = getPublicGroup();
+//
+//        Set<GroupRoles.Role> roles = new HashSet<>(Collections.singletonList(GroupRoles.Role.USER));
+//
+//        return new GroupRoles(publicGroup, roles);
+//    }
 }
