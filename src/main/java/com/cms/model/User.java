@@ -1,6 +1,7 @@
 package com.cms.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -14,6 +15,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Null;
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -143,18 +145,19 @@ public class User implements Serializable, UserDetails {
 		return groupListMap;
 	}
 
-	@JsonIgnore
-	public Boolean isSuperAdmin(){
-		if(this.groupRolesList == null)
-			return false;
+//	@JsonIgnore
+//	public Boolean isSuperAdmin(){
+//		if(this.groupRolesList == null)
+//			return false;
+//
+//		for(GroupRoles groupRoles : this.groupRolesList){
+//			if(groupRoles.roleContains(GroupRoles.Role.SUPER_ADMIN))
+//				return true;
+//		}
+//
+//		return false;
+//	}
 
-		for(GroupRoles groupRoles : this.groupRolesList){
-			if(groupRoles.roleContains(GroupRoles.Role.SUPER_ADMIN))
-				return true;
-		}
-
-		return false;
-	}
 
 	@JsonIgnore
 	public Set<Group> getGroups(){
@@ -166,36 +169,55 @@ public class User implements Serializable, UserDetails {
 	}
 
 	@JsonIgnore
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Collections.singleton(new SimpleGrantedAuthority("ROLE_NORMAL"));
+	public Set<GroupRoles.Role> getRoles(){
+		if(this.groupRolesList == null)
+			return null;
+
+		Set<GroupRoles.Role> roles = new HashSet<>();
+		for(GroupRoles groupRoles : this.groupRolesList){
+			roles.addAll(groupRoles.getRoles());
+		}
+
+		return roles;
 	}
 
-	@JsonIgnore
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+
+		for(GroupRoles.Role role : this.getRoles()) {
+			authorities.add(new SimpleGrantedAuthority(role.getName()));
+		}
+
+		return authorities;
+	}
+
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@Override
 	public String getUsername() {
 		return email;
 	}
 
-	@JsonIgnore
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@Override
 	public boolean isAccountNonExpired() {
 		return true;
 	}
 
-	@JsonIgnore
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@Override
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 
-	@JsonIgnore
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
 
-	@JsonIgnore
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@Override
 	public boolean isEnabled() {
 		return true;
