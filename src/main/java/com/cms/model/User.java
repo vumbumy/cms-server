@@ -126,7 +126,7 @@ public class User implements Serializable, UserDetails {
 		}
 
 		return this.groupRolesList.add(
-				new GroupRoles(group)
+				new GroupRoles(group, role)
 		);
 	}
 

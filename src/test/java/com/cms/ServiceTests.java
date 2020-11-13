@@ -83,6 +83,7 @@ class ServiceTests {
 		Group bGroup = new Group("B");
 
 		User aGroupAdminUser = new User("aGroupAdminUser");
+		aGroupAdminUser.addGroupRole(aGroup, GroupRoles.Role.ADMIN);
 
 		assertTrue(userService.isGroupAdmin(aGroupAdminUser, aGroup));
 

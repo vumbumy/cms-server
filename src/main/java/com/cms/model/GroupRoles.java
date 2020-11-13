@@ -29,6 +29,12 @@ public class GroupRoles {
         this.addRole(Role.USER);
     }
 
+    public GroupRoles(Group group, Role role) {
+        this.group = group;
+        this.addRole(Role.USER);
+        this.addRole(role);
+    }
+
     public GroupRoles(Group group, Set<Role> roles) {
         this.group = group;
         this.addRole(Role.USER);
