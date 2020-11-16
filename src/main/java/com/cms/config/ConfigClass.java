@@ -53,11 +53,11 @@ public class ConfigClass implements ApplicationListener<ContextRefreshedEvent> {
         );
     }
 
-//    public GroupRoles getPublicGroupRoles(){
-//        Group publicGroup = getPublicGroup();
-//
-//        Set<GroupRoles.Role> roles = new HashSet<>(Collections.singletonList(GroupRoles.Role.USER));
-//
-//        return new GroupRoles(publicGroup, roles);
-//    }
+    public GroupRoles getPublicGroupRoles(){
+        Group publicGroup = getPublicGroup();
+
+        Set<GroupRoles.Role> roles = new HashSet<>(Collections.singletonList(GroupRoles.Role.USER));
+
+        return new GroupRoles(publicGroup, roles);
+    }
 }
