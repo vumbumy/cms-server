@@ -52,6 +52,11 @@ public class User implements Serializable, UserDetails {
 		this.addGroupRoles(group, roles);
 	}
 
+	public User(String email, Group group, GroupRoles.Role role){
+		this.email = email;
+		this.addGroupRole(group, role);
+	}
+
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "user_group_roles",
 			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -145,18 +150,18 @@ public class User implements Serializable, UserDetails {
 		return groupListMap;
 	}
 
-//	@JsonIgnore
-//	public Boolean isSuperAdmin(){
-//		if(this.groupRolesList == null)
-//			return false;
-//
-//		for(GroupRoles groupRoles : this.groupRolesList){
-//			if(groupRoles.roleContains(GroupRoles.Role.SUPER_ADMIN))
-//				return true;
-//		}
-//
-//		return false;
-//	}
+	@JsonIgnore
+	public Boolean isSuperAdmin(){
+		if(this.groupRolesList == null)
+			return false;
+
+		for(GroupRoles groupRoles : this.groupRolesList){
+			if(groupRoles.roleContains(GroupRoles.Role.SUPER_ADMIN))
+				return true;
+		}
+
+		return false;
+	}
 
 
 	@JsonIgnore

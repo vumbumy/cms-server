@@ -19,6 +19,9 @@ public class ContentService {
     PermissionRepository permissionRepository;
 
     public Boolean isReadable(Content content, User user){
+        if(user.isSuperAdmin())
+            return true;
+
         if(content.isAuthor(user))
             return true;
 
@@ -37,6 +40,9 @@ public class ContentService {
     }
 
     public Boolean isWritable(Content content, User user){
+        if(user.isSuperAdmin())
+            return true;
+
         if(content.isAuthor(user))
             return true;
 

@@ -46,7 +46,7 @@ class ServiceTests {
 
 //		GroupRoles publicGroupRoles = groupService.getPublicGroupRoles();
 
-		User aGroupAdminUser = new User("aGroupAdminUser", publicGroup);
+		User aGroupAdminUser = new User("aGroupAdminUser", publicGroup, GroupRoles.Role.SUPER_ADMIN);
 		assertEquals(aGroupAdminUser.getGroupRolesList().size(), 1);
 
 		User bUser = new User("bUser", publicGroup);
@@ -70,8 +70,12 @@ class ServiceTests {
 		Content cContent = new Content("C", aGroupAdminUser);
 		assertTrue(cContent.addPermission(publicPermission));
 
+		Content dContent = new Content("D", bUser);
+		assertTrue(dContent.addPermission(publicPermission));
+
 		assertTrue(contentService.isWritable(aContent, aGroupAdminUser));
 		assertTrue(contentService.isReadable(bContent, aGroupAdminUser));
+		assertTrue(contentService.isWritable(dContent, aGroupAdminUser));
 
 		assertFalse(contentService.isWritable(aContent, bUser));
 		assertTrue(contentService.isReadable(aContent, bUser));

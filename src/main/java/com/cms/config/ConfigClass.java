@@ -2,8 +2,10 @@ package com.cms.config;
 
 import com.cms.model.Group;
 import com.cms.model.GroupRoles;
+import com.cms.model.User;
 import com.cms.repository.GroupRepository;
 import com.cms.repository.GroupRolesRepository;
+import com.cms.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ public class ConfigClass implements ApplicationListener<ContextRefreshedEvent> {
     @Autowired
     GroupRolesRepository groupRolesRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -34,11 +39,16 @@ public class ConfigClass implements ApplicationListener<ContextRefreshedEvent> {
         logger.info(org.hibernate.Version.getVersionString());
 
         Group publicGroup = makePublicGroupIfNotExist();
+        User superAdmin = makeSuperAdmin(publicGroup);
+    }
+
+    private User makeSuperAdmin(Group publicGroup){
+        User superAdmin = new User("admin@example.com", publicGroup, GroupRoles.Role.SUPER_ADMIN);
+
+        return userRepository.save(superAdmin);
     }
 
     private Group makePublicGroupIfNotExist() {
-        Group publicGroup = null;
-
         Optional<Group> optionalGroup = groupRepository.findById(Group.PUBLIC_ID);
         return optionalGroup.orElseGet(() -> groupRepository.save(
                 new Group(Group.PUBLIC_ID, Group.PUBLIC_NAME)
