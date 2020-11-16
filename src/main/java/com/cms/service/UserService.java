@@ -1,5 +1,6 @@
 package com.cms.service;
 
+import com.cms.config.security.JwtTokenProvider;
 import com.cms.model.Group;
 import com.cms.model.GroupRoles;
 import com.cms.model.User;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -20,6 +22,19 @@ import java.util.Optional;
 public class UserService implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    public User getAuthorisedUser(String email, String password){
+        User member = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
+        if (!passwordEncoder.matches(password, member.getPassword())) {
+            throw new IllegalArgumentException("잘못된 비밀번호입니다.");
+        }
+
+        return member;
+    }
 
     public Page<User> getAllUserList(Pageable pageable){
         return userRepository.findAll(pageable);
