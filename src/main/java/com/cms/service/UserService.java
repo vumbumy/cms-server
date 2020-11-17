@@ -1,5 +1,6 @@
 package com.cms.service;
 
+import com.cms.config.ConfigClass;
 import com.cms.config.security.JwtTokenProvider;
 import com.cms.model.Group;
 import com.cms.model.GroupRoles;
@@ -25,6 +26,23 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    ConfigClass configClass;
+
+    public Long addNewUser(String email, String password){
+        Optional<User> userOptional = userRepository.findUserByEmail(email);
+        if(userOptional.isPresent())
+            return 0L;
+
+        Group publicGroup = configClass.getPublicGroup();
+
+        User user = new User(email);
+        user.addGroupRole(publicGroup, GroupRoles.Role.USER);
+        user.setPassword(passwordEncoder.encode(password));
+
+        return userRepository.save(user).getId();
+    }
 
     public User getAuthorisedUser(String email, String password){
         User member = userRepository.findUserByEmail(email)

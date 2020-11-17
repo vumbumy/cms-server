@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -56,6 +57,8 @@ public class User implements Serializable, UserDetails {
 		this.email = email;
 		this.addGroupRole(group, role);
 	}
+
+
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "user_group_roles",
