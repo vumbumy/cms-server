@@ -1,8 +1,7 @@
 package com.cms.service;
 
 import com.cms.config.ConfigClass;
-import com.cms.config.Exception.NullUserException;
-import com.cms.config.security.JwtTokenProvider;
+import com.cms.config.Exception.UserNotFoundException;
 import com.cms.model.Group;
 import com.cms.model.GroupRoles;
 import com.cms.model.User;
@@ -60,8 +59,24 @@ public class UserService implements UserDetailsService {
         return member;
     }
 
-    public Page<User> getAllUserList(Pageable pageable){
-        return userRepository.findAll(pageable);
+    public Page<User> getAllUserList(User user, Pageable pageable){
+        if(user == null) throw new UserNotFoundException();
+
+        if(user.isSuperAdmin())
+            return userRepository.findAll(pageable);
+
+        return null;
+    }
+
+    public Page<User> getGroupUserList(Long groupId, User user, Pageable pageable){
+        if(user == null) throw new UserNotFoundException();
+
+        Group group = getGroupInfo(groupId, user);
+        if(group == null) return null;
+
+//        if(!user.isAdmin(group)) return null;
+
+        return userRepository.findAllByGroupsContains(group, pageable);
     }
 
     public Boolean isGroupAdmin(User admin, Group group){
@@ -80,7 +95,7 @@ public class UserService implements UserDetailsService {
     }
 
     public Group getGroupInfo(Long groupId, User user){
-        if(user == null) throw new NullUserException();
+        if(user == null) throw new UserNotFoundException();
 
         Optional<Group> optionalGroup = groupRepository.findById(groupId);
         if(!optionalGroup.isPresent()){
@@ -95,7 +110,7 @@ public class UserService implements UserDetailsService {
     }
 
     public Set<GroupRoles.Role> getGroupRoles(Long groupId, User user){
-        if(user == null) throw new NullUserException();
+        if(user == null) throw new UserNotFoundException();
 
         Optional<Group> optionalGroup = groupRepository.findById(groupId);
         if(!optionalGroup.isPresent()){

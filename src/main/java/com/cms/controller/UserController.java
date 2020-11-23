@@ -63,9 +63,8 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    Page<User> getAllUserList(Pageable pageable){
-
-        return userService.getAllUserList(pageable);
+    Page<User> getAllUserList(@AuthenticationPrincipal User user, Pageable pageable){
+        return userService.getAllUserList(user, pageable);
     }
 
     @GetMapping(value = "/{id}/roles")

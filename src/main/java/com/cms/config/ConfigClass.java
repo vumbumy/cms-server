@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,9 @@ public class ConfigClass implements ApplicationListener<ContextRefreshedEvent> {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -44,6 +48,8 @@ public class ConfigClass implements ApplicationListener<ContextRefreshedEvent> {
 
     private User makeSuperAdmin(Group publicGroup){
         User superAdmin = new User("admin@example.com", publicGroup, GroupRoles.Role.SUPER_ADMIN);
+
+        superAdmin.setPassword(passwordEncoder.encode(superAdmin.getPassword()));
 
         return userRepository.save(superAdmin);
     }

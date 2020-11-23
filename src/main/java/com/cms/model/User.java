@@ -165,6 +165,23 @@ public class User implements Serializable, UserDetails {
 		return false;
 	}
 
+	@JsonIgnore
+	public Boolean isAdmin(Group group){
+		if(this.isSuperAdmin())
+			return true;
+
+		if(this.groupRolesList == null)
+			return false;
+
+		for(GroupRoles groupRoles : this.groupRolesList){
+			if(groupRoles.isEqualGroup(group) && groupRoles.roleContains(GroupRoles.Role.ADMIN))
+				return true;
+		}
+
+		return false;
+	}
+
+	@JsonIgnore
 	public Set<Group> getGroups(){
 		HashMap<Group, Collection<GroupRoles.Role>> groupListMap = this.getGroupListMap();
 		if(groupListMap == null)
