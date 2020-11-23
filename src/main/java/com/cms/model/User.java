@@ -34,7 +34,7 @@ public class User implements Serializable, UserDetails {
 	@Email
 	private String email;
 
-	@JsonIgnore
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@JsonSetter
 	@Column(nullable = false)
 	private String password = "P@ssw0rd";
@@ -58,9 +58,8 @@ public class User implements Serializable, UserDetails {
 		this.addGroupRole(group, role);
 	}
 
-
-
-	@OneToMany(cascade = CascadeType.ALL)
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "user_group_roles",
 			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "group_roles_id", referencedColumnName = "id"))
@@ -166,8 +165,6 @@ public class User implements Serializable, UserDetails {
 		return false;
 	}
 
-
-	@JsonIgnore
 	public Set<Group> getGroups(){
 		HashMap<Group, Collection<GroupRoles.Role>> groupListMap = this.getGroupListMap();
 		if(groupListMap == null)
@@ -191,8 +188,8 @@ public class User implements Serializable, UserDetails {
 
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+	public Collection<SimpleGrantedAuthority> getAuthorities() {
+		Set<SimpleGrantedAuthority> authorities = new HashSet<>();
 
 		for(GroupRoles.Role role : this.getRoles()) {
 			authorities.add(new SimpleGrantedAuthority(role.getName()));

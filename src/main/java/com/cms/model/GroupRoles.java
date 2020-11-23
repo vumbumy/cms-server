@@ -20,7 +20,7 @@ public class GroupRoles {
     @OneToOne
     private Group group;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "roles")
     private Set<Role> roles;
 

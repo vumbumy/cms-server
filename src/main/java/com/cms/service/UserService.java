@@ -1,10 +1,12 @@
 package com.cms.service;
 
 import com.cms.config.ConfigClass;
+import com.cms.config.Exception.NullUserException;
 import com.cms.config.security.JwtTokenProvider;
 import com.cms.model.Group;
 import com.cms.model.GroupRoles;
 import com.cms.model.User;
+import com.cms.repository.GroupRepository;
 import com.cms.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,11 +20,15 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    GroupRepository groupRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -71,6 +77,36 @@ public class UserService implements UserDetailsService {
             return false;
 
         return roles.contains(GroupRoles.Role.ADMIN);
+    }
+
+    public Group getGroupInfo(Long groupId, User user){
+        if(user == null) throw new NullUserException();
+
+        Optional<Group> optionalGroup = groupRepository.findById(groupId);
+        if(!optionalGroup.isPresent()){
+            return null;
+        }
+
+        Group group = optionalGroup.get();
+        if(user.containsGroup(group))
+            return group;
+
+        return null;
+    }
+
+    public Set<GroupRoles.Role> getGroupRoles(Long groupId, User user){
+        if(user == null) throw new NullUserException();
+
+        Optional<Group> optionalGroup = groupRepository.findById(groupId);
+        if(!optionalGroup.isPresent()){
+            return null;
+        }
+
+        Group group = optionalGroup.get();
+        if(user.containsGroup(group))
+            return user.getGroupRoles(group);
+
+        return null;
     }
 
     @Override

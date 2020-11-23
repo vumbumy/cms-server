@@ -13,7 +13,7 @@ import javax.validation.constraints.NotEmpty;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="groups")
+@Table(name="user_groups")
 public class Group{
 	public static final Long PUBLIC_ID = 1L;
 	public static final String PUBLIC_NAME = "PUBLIC";

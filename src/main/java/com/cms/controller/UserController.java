@@ -12,39 +12,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@ControllerAdvice
 @Slf4j
 @RestController
 @RequestMapping(value = "/api/user")
 public class UserController {
-    // 400
-    @ExceptionHandler({RuntimeException.class})
-    public ResponseEntity<Object> BadRequestException(final RuntimeException ex) {
-        log.warn("error", ex);
-        return ResponseEntity.badRequest().body(ex.getMessage());
-    }
-
-
-    // 401
-    @ExceptionHandler({IllegalArgumentException.class})
-    public ResponseEntity<Object> handleIllegalArgumentException(final IllegalArgumentException ex) {
-        log.warn("error", ex);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
-    }
-
-
-    // 500
-    @ExceptionHandler({ Exception.class })
-    public ResponseEntity<Object> handleAll(final Exception ex) {
-        log.info(ex.getClass().getName());
-        log.error("error", ex);
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
     @Autowired
     UserService userService;
 
@@ -54,6 +30,13 @@ public class UserController {
     private void checkEmailAndPassword(Map<String, String> user){
         if(!user.containsKey("email") || !user.containsKey("password"))
             throw new RuntimeException();
+    }
+
+    @PostMapping("/me")
+    public ResponseEntity<Object> getCurrentUser(@AuthenticationPrincipal User user) {
+        if(user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 토큰입니다.");
+
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping("/join")
@@ -83,5 +66,12 @@ public class UserController {
     Page<User> getAllUserList(Pageable pageable){
 
         return userService.getAllUserList(pageable);
+    }
+
+    @GetMapping(value = "/{id}/roles")
+    public ResponseEntity<Object> getGroupRoles(@AuthenticationPrincipal User user, @PathVariable Long id) {
+        return ResponseEntity.ok(
+                userService.getGroupRoles(id, user)
+        );
     }
 }

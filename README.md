@@ -17,6 +17,14 @@
     
 ---
 
+### 실행
+
+```sh
+./mvnw spring-boot:run
+```
+
+---
+
 application.properties
 
     # database
