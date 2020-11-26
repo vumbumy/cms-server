@@ -56,8 +56,8 @@ public class ConfigClass implements ApplicationListener<ContextRefreshedEvent> {
 
     private User getSuperAdmin(Group publicGroup){
         Optional<User> optionalUser = userRepository.findUserByEmail(SUPER_USER_EMAIL);
+        return optionalUser.orElseGet(() -> makeSuperAdmin(publicGroup));
 
-        return optionalUser.orElse(makeSuperAdmin(publicGroup));
     }
 
     private User makeSuperAdmin(Group publicGroup){
