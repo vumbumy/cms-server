@@ -1,14 +1,12 @@
 package com.cms.controller;
 
-import com.cms.config.dto.UserDTO;
+import com.cms.dto.UserDto;
 import com.cms.config.security.JwtTokenProvider;
 import com.cms.model.User;
 import com.cms.service.UserService;
 import com.cms.service.VerificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,7 +36,7 @@ public class MainController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<Object> join(@RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity<Object> join(@RequestBody @Valid UserDto userDTO) {
         // 회원가입: https://webfirewood.tistory.com/m/115?category=672592
         User user = userService.addNewUser(userDTO);
 
@@ -49,7 +47,7 @@ public class MainController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity<Object> login(@RequestBody @Valid UserDto userDTO) {
         User member = userService.getAuthorisedUser(userDTO);
 
         return ResponseEntity.ok(
@@ -57,8 +55,17 @@ public class MainController {
         );
     }
 
-    @GetMapping("/verify/{code}")
-    public ResponseEntity<Object> verify(@PathVariable String code) {
+    @PostMapping("/resend")
+    public ResponseEntity<Object> resendCode(@RequestParam("email") String email) {
+        User user = userService.getUserByEmail(email);
+
+        return ResponseEntity.ok(
+                verificationService.sendVerificationCodeEmail(user)
+        );
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<Object> verifyCode(@RequestParam("code") String code) {
         User user = null;
 
         user = verificationService.verifyCode(code);

@@ -2,7 +2,7 @@ package com.cms.service;
 
 import com.cms.config.ConfigClass;
 import com.cms.config.Exception.UserNotFoundException;
-import com.cms.config.dto.UserDTO;
+import com.cms.dto.UserDto;
 import com.cms.model.Group;
 import com.cms.model.GroupRoles;
 import com.cms.model.User;
@@ -36,7 +36,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     ConfigClass configClass;
 
-    public User addNewUser(UserDTO userDTO){
+    public User addNewUser(UserDto userDTO){
         Optional<User> userOptional = userRepository.findUserByEmail(userDTO.email);
         if(userOptional.isPresent())
             throw  new IllegalArgumentException("이미 가입된 E-MAIL 주소입니다.");
@@ -50,14 +50,21 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public User getAuthorisedUser(UserDTO userDTO){
+    public User getAuthorisedUser(UserDto userDTO){
         User member = userRepository.findUserByEmail(userDTO.email)
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
-        if (!passwordEncoder.matches(userDTO.password, member.getPassword())) {
+        if (!passwordEncoder.matches(userDTO.password, member.getPassword()))
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
-        }
+
+        if(!member.isEnabled())
+            throw new IllegalArgumentException("인증되지 않은 E-MAIL 입니다.");
 
         return member;
+    }
+
+    public User getUserByEmail(String email){
+        Optional<User> userOptional = userRepository.findUserByEmail(email);
+        return userOptional.orElseThrow(UserNotFoundException::new);
     }
 
     public Page<User> getAllUserList(User user, Pageable pageable){

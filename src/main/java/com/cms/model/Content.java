@@ -1,6 +1,5 @@
 package com.cms.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -60,6 +59,9 @@ public class Content {
 	}
 
 	public Boolean deletePermission(Permission permission){
+		if(this.permissions == null)
+			return false;
+
 		return this.permissions.remove(permission);
 	}
 }

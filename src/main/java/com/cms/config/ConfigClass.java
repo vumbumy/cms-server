@@ -6,11 +6,15 @@ import com.cms.model.User;
 import com.cms.repository.GroupRepository;
 import com.cms.repository.GroupRolesRepository;
 import com.cms.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,9 +24,13 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+@Slf4j
 @Component
 public class ConfigClass implements ApplicationListener<ContextRefreshedEvent> {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Value("${custom.default.admin_email}")
+    private String SUPER_USER_EMAIL;
 
     @Autowired
     GroupRepository groupRepository;
@@ -43,12 +51,19 @@ public class ConfigClass implements ApplicationListener<ContextRefreshedEvent> {
         logger.info(org.hibernate.Version.getVersionString());
 
         Group publicGroup = makePublicGroupIfNotExist();
-        User superAdmin = makeSuperAdmin(publicGroup);
+        User superAdmin = getSuperAdmin(publicGroup);
+    }
+
+    private User getSuperAdmin(Group publicGroup){
+        Optional<User> optionalUser = userRepository.findUserByEmail(SUPER_USER_EMAIL);
+
+        return optionalUser.orElse(makeSuperAdmin(publicGroup));
     }
 
     private User makeSuperAdmin(Group publicGroup){
-        User superAdmin = new User("admin@example.com", publicGroup, GroupRoles.Role.SUPER_ADMIN);
+        User superAdmin = new User(SUPER_USER_EMAIL, publicGroup, GroupRoles.Role.SUPER_ADMIN);
 
+        superAdmin.setActivate(true);
         superAdmin.setPassword(passwordEncoder.encode(superAdmin.getPassword()));
 
         return userRepository.save(superAdmin);
@@ -75,5 +90,10 @@ public class ConfigClass implements ApplicationListener<ContextRefreshedEvent> {
         Set<GroupRoles.Role> roles = new HashSet<>(Collections.singletonList(GroupRoles.Role.USER));
 
         return new GroupRoles(publicGroup, roles);
+    }
+
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
     }
 }

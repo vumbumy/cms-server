@@ -1,6 +1,6 @@
 package com.cms.service;
 
-import com.cms.config.dto.MailDTO;
+import com.cms.dto.MailDto;
 import com.cms.model.User;
 import com.cms.model.VerificationCode;
 import com.cms.repository.VerificationCodeRepository;
@@ -23,7 +23,7 @@ public class VerificationService {
 
         String message = "CODE: " + token.getCode();
 
-        MailDTO mailDTO = new MailDTO(user.getEmail(), "JOIN", message);
+        MailDto mailDTO = new MailDto(user.getEmail(), "JOIN", message);
 
         mailService.mailSend(mailDTO);
 
@@ -44,8 +44,10 @@ public class VerificationService {
     public User verifyCode(String token){
         VerificationCode verificationCode = tokenRepository.findByCode(token);
         if (verificationCode == null) {
-            throw new RuntimeException("invalid Token");
+            throw new RuntimeException("잘못된 코드입니다.");
         }
+
+        tokenRepository.delete(verificationCode);
 
         return verificationCode.getUser();
     }

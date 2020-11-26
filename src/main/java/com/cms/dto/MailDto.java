@@ -1,4 +1,4 @@
-package com.cms.config.dto;
+package com.cms.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MailDTO {
+public class MailDto {
     private String address;
     private String title;
     private String message;

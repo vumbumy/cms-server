@@ -27,11 +27,14 @@
 
 application.properties
 
+    # custom
+    custom.default.admin_email=<admin@example.com>
+    
     # database
     spring.datasource.url=jdbc:mysql://localhost/content_db?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
     
-    spring.datasource.username=user
-    spring.datasource.password=password
+    spring.datasource.username=<user>
+    spring.datasource.password=<password>
     spring.datasource.driverClassName=com.mysql.cj.jdbc.Driver
     
     # Specify the DBMS

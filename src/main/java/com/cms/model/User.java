@@ -4,19 +4,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Null;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -32,31 +33,33 @@ public class User implements Serializable, UserDetails {
 
 	@Column(unique=true, nullable = false)
 	@Email
+	@NotEmpty
 	private String email;
 
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@JsonSetter
 	@Column(nullable = false)
+	@NotEmpty
 	private String password = "P@ssw0rd";
 
 	@Column
 	private Boolean activate = false;
 
-	public User(String email){
+	public User(@Valid String email){
 		this.email = email;
 	}
 
-	public User(String email, Group group){
+	public User(@Valid String email, Group group){
 		this.email = email;
 		this.addGroup(group);
 	}
 
-	public User(String email, Group group, Set<GroupRoles.Role> roles){
+	public User(@Valid String email, Group group, Set<GroupRoles.Role> roles){
 		this.email = email;
 		this.addGroupRoles(group, roles);
 	}
 
-	public User(String email, Group group, GroupRoles.Role role){
+	public User(@Valid String email, Group group, GroupRoles.Role role){
 		this.email = email;
 		this.addGroupRole(group, role);
 	}
