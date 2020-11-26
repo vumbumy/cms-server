@@ -2,6 +2,7 @@ package com.cms.service;
 
 import com.cms.config.ConfigClass;
 import com.cms.config.Exception.UserNotFoundException;
+import com.cms.config.dto.UserDTO;
 import com.cms.model.Group;
 import com.cms.model.GroupRoles;
 import com.cms.model.User;
@@ -35,24 +36,24 @@ public class UserService implements UserDetailsService {
     @Autowired
     ConfigClass configClass;
 
-    public Long addNewUser(String email, String password){
-        Optional<User> userOptional = userRepository.findUserByEmail(email);
+    public User addNewUser(UserDTO userDTO){
+        Optional<User> userOptional = userRepository.findUserByEmail(userDTO.email);
         if(userOptional.isPresent())
-            return 0L;
+            throw  new IllegalArgumentException("이미 가입된 E-MAIL 주소입니다.");
 
         Group publicGroup = configClass.getPublicGroup();
 
-        User user = new User(email);
+        User user = new User(userDTO.email);
         user.addGroupRole(publicGroup, GroupRoles.Role.USER);
-        user.setPassword(passwordEncoder.encode(password));
+        user.setPassword(passwordEncoder.encode(userDTO.password));
 
-        return userRepository.save(user).getId();
+        return userRepository.save(user);
     }
 
-    public User getAuthorisedUser(String email, String password){
-        User member = userRepository.findUserByEmail(email)
+    public User getAuthorisedUser(UserDTO userDTO){
+        User member = userRepository.findUserByEmail(userDTO.email)
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
-        if (!passwordEncoder.matches(password, member.getPassword())) {
+        if (!passwordEncoder.matches(userDTO.password, member.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
         }
 
@@ -109,6 +110,14 @@ public class UserService implements UserDetailsService {
         return null;
     }
 
+    public User userActivate(User user){
+        if(user == null) throw new UserNotFoundException();
+
+        user.setActivate(true);
+
+        return userRepository.save(user);
+    }
+
     public Set<GroupRoles.Role> getGroupRoles(Long groupId, User user){
         if(user == null) throw new UserNotFoundException();
 
@@ -123,6 +132,7 @@ public class UserService implements UserDetailsService {
 
         return null;
     }
+
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

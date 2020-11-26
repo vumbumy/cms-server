@@ -43,3 +43,11 @@ application.properties
     # Hibernate settings
     spring.jpa.hibernate.ddl-auto=update
     spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+    
+    # Spring Boot Mail Server Properties
+    spring.mail.host=smtp.gmail.com
+    spring.mail.port=587
+    spring.mail.username=<login user to smtp server>
+    spring.mail.password=<login password to smtp server>
+    spring.mail.properties.mail.smtp.auth=true
+    spring.mail.properties.mail.smtp.starttls.enable=true

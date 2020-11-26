@@ -39,6 +39,9 @@ public class User implements Serializable, UserDetails {
 	@Column(nullable = false)
 	private String password = "P@ssw0rd";
 
+	@Column
+	private Boolean activate = false;
+
 	public User(String email){
 		this.email = email;
 	}
@@ -242,7 +245,7 @@ public class User implements Serializable, UserDetails {
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@Override
 	public boolean isEnabled() {
-		return true;
+		return activate;
 	}
 
 //	@JsonIgnore

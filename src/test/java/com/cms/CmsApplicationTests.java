@@ -69,7 +69,7 @@ class CmsApplicationTests {
 		assertTrue(aGroupAdminUser.addGroupRole(aGroup, GroupRoles.Role.ADMIN));
 		assertEquals(aGroupAdminUser.getGroupRoles(aGroup).size(), 2);
 
-		assertTrue(bUser.addGroupRole(aGroup, GroupRoles.Role.ADVERTISER));
+		assertFalse(bUser.addGroupRole(aGroup, GroupRoles.Role.ADVERTISER));
 		assertEquals(bUser.getGroupRoles(aGroup).size(), 2);
 	}
 
