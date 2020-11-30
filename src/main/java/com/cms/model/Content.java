@@ -13,11 +13,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Entity
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="contents")
-public class Content {
+@MappedSuperclass
+public abstract class Content {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;

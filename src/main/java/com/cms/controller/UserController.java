@@ -27,11 +27,6 @@ public class UserController {
     @Autowired
     JwtTokenProvider jwtTokenProvider;
 
-    private void checkEmailAndPassword(Map<String, String> user){
-        if(!user.containsKey("email") || !user.containsKey("password"))
-            throw new RuntimeException();
-    }
-
     @PostMapping("/me")
     public ResponseEntity<Object> getCurrentUser(@AuthenticationPrincipal User user) {
         if(user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 토큰입니다.");
@@ -39,38 +34,9 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PostMapping("/join")
-    public ResponseEntity<Object> join(@RequestBody Map<String, String> user) {
-        // 회원가입: https://webfirewood.tistory.com/m/115?category=672592
-        this.checkEmailAndPassword(user);
-
-        return ResponseEntity.ok(
-                userService.addNewUser(user.get("email"), user.get("password"))
-        );
-    }
-
-    // 로그인
-    @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody Map<String, String> user) {
-        this.checkEmailAndPassword(user);
-
-        User member = userService.getAuthorisedUser(user.get("email"), user.get("password"));
-
-        return ResponseEntity.ok(
-            jwtTokenProvider.createToken(member.getUsername(), member.getRoles())
-        );
-    }
-
     @ResponseBody
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     Page<User> getAllUserList(@AuthenticationPrincipal User user, Pageable pageable){
         return userService.getAllUserList(user, pageable);
-    }
-
-    @GetMapping(value = "/{id}/roles")
-    public ResponseEntity<Object> getGroupRoles(@AuthenticationPrincipal User user, @PathVariable Long id) {
-        return ResponseEntity.ok(
-                userService.getGroupRoles(id, user)
-        );
     }
 }
