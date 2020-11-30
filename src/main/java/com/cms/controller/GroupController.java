@@ -42,11 +42,10 @@ public class GroupController {
         return userService.getGroupRoles(id, user);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PostMapping("/group")
-    public ResponseEntity<Object> createNewGroup(@AuthenticationPrincipal User user, @RequestBody Group newGroup) {
-        return ResponseEntity.ok(
-                groupService.addNewGroup(newGroup, user)
-        );
+    public Group createNewGroup(@AuthenticationPrincipal User user, @RequestBody Group newGroup) {
+        return groupService.addNewGroup(newGroup, user);
     }
 
     @ResponseStatus(HttpStatus.OK)

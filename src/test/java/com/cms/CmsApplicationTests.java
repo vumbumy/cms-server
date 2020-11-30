@@ -44,7 +44,7 @@ class CmsApplicationTests {
 
 		bUser = new User("bUser");
 
-		aContent = new Content("A", aGroupAdminUser);
+//		aContent = new Content("A", aGroupAdminUser);
 
 //		assertTrue(aGroupAdminUser.addGroupRole(aGroup, GroupRoles.Role.ADMIN));
 
@@ -75,10 +75,10 @@ class CmsApplicationTests {
 
 	@Test
 	void permissionTest() {
-		Permission aUserWritePermission = new Permission(aGroupAdminUser, null, Permission.AccessRights.WRITE_RIGHT);
-		Permission aGroupReadPermission = new Permission(null, aGroup, Permission.AccessRights.READ_RIGHT);
+//		Permission aUserWritePermission = new Permission(aGroupAdminUser, null, Permission.AccessRights.WRITE_RIGHT);
+//		Permission aGroupReadPermission = new Permission(null, aGroup, Permission.AccessRights.READ_RIGHT);
 
-		assertTrue(aContent.addPermission(aUserWritePermission));
-		assertTrue(aContent.addPermission(aGroupReadPermission));
+//		assertTrue(aContent.addPermission(aUserWritePermission));
+//		assertTrue(aContent.addPermission(aGroupReadPermission));
 	}
 }

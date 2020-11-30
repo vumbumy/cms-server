@@ -57,33 +57,33 @@ class ServiceTests {
 		User cUser = new User("cUser", publicGroup);
 		assertEquals(cUser.getGroupRolesList().size(), 1);
 
-		Permission publicPermission = new Permission(null, publicGroup, Permission.AccessRights.READ_RIGHT);
-		Permission bUserWritePermission = new Permission(bUser, null, Permission.AccessRights.WRITE_RIGHT);
-		Permission aGroupReadPermission = new Permission(null, aGroup, Permission.AccessRights.READ_RIGHT);
+//		Permission publicPermission = new Permission(null, publicGroup, Permission.AccessRights.READ_RIGHT);
+//		Permission bUserWritePermission = new Permission(bUser, null, Permission.AccessRights.WRITE_RIGHT);
+//		Permission aGroupReadPermission = new Permission(null, aGroup, Permission.AccessRights.READ_RIGHT);
 
-		Content aContent = new Content("A", aGroupAdminUser);
-		assertTrue(aContent.addPermission(aGroupReadPermission));
+//		Content aContent = new Content("A", aGroupAdminUser);
+//		assertTrue(aContent.addPermission(aGroupReadPermission));
 
-		Content bContent = new Content("B", aGroupAdminUser);
-		assertTrue(bContent.addPermission(bUserWritePermission));
+//		Content bContent = new Content("B", aGroupAdminUser);
+//		assertTrue(bContent.addPermission(bUserWritePermission));
 
-		Content cContent = new Content("C", aGroupAdminUser);
-		assertTrue(cContent.addPermission(publicPermission));
+//		Content cContent = new Content("C", aGroupAdminUser);
+//		assertTrue(cContent.addPermission(publicPermission));
 
-		Content dContent = new Content("D", bUser);
-		assertTrue(dContent.addPermission(publicPermission));
+//		Content dContent = new Content("D", bUser);
+//		assertTrue(dContent.addPermission(publicPermission));
 
-		assertTrue(contentService.isWritable(aContent, aGroupAdminUser));
-		assertTrue(contentService.isReadable(bContent, aGroupAdminUser));
-		assertTrue(contentService.isWritable(dContent, aGroupAdminUser));
+//		assertTrue(contentService.isWritable(aContent, aGroupAdminUser));
+//		assertTrue(contentService.isReadable(bContent, aGroupAdminUser));
+//		assertTrue(contentService.isWritable(dContent, aGroupAdminUser));
 
-		assertFalse(contentService.isWritable(aContent, bUser));
-		assertTrue(contentService.isReadable(aContent, bUser));
-		assertTrue(contentService.isWritable(bContent, bUser));
+//		assertFalse(contentService.isWritable(aContent, bUser));
+//		assertTrue(contentService.isReadable(aContent, bUser));
+//		assertTrue(contentService.isWritable(bContent, bUser));
 
-		assertFalse(contentService.isReadable(aContent, cUser));
-		assertFalse(contentService.isReadable(bContent, cUser));
-		assertTrue(contentService.isReadable(cContent, cUser));
+//		assertFalse(contentService.isReadable(aContent, cUser));
+//		assertFalse(contentService.isReadable(bContent, cUser));
+//		assertTrue(contentService.isReadable(cContent, cUser));
 	}
 
 	@Test
