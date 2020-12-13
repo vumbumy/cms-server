@@ -1,18 +1,11 @@
 package com.cms;
 
 import com.cms.model.*;
-import com.cms.service.ContentService;
-import com.cms.service.GroupService;
-import com.cms.service.UserService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.Collection;
-import java.util.HashMap;
 
 import static org.junit.Assert.*;
 
@@ -44,9 +37,9 @@ class CmsApplicationTests {
 
 		bUser = new User("bUser");
 
-//		aContent = new Content("A", aGroupAdminUser);
+		aContent = new Content(aGroupAdminUser);
 
-//		assertTrue(aGroupAdminUser.addGroupRole(aGroup, GroupRoles.Role.ADMIN));
+		assertTrue(aGroupAdminUser.addGroupRole(aGroup, GroupRoles.Role.ADMIN));
 
 		assertTrue(bUser.addGroupRole(aGroup, GroupRoles.Role.ADVERTISER));
 	}

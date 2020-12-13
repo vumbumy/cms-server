@@ -1,66 +1,22 @@
 package com.cms.model;
 
+import com.cms.model.core.BaseContentEntity;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
 
+@Entity
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@MappedSuperclass
-public abstract class Content {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+@Table(name="contents")
+public class Content extends BaseContentEntity {
+    public Content(User user){
+        super(user.getId());
+    }
 
-	@OneToOne
-	private User author;
-
-	@Column
-	@NotEmpty
-	private String name;
-
-	public Content(String name, User author){
-		this.name = name;
-		this.author = author;
-	}
-
-	public Boolean isAuthor(User user){
-		return this.author.equals(user);
-	}
-
-	@CreationTimestamp
-	private LocalDateTime createDateTime;
-
-	@UpdateTimestamp
-	private LocalDateTime updateDateTime;
-
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "content_permissions",
-			joinColumns = @JoinColumn(name = "content_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id"))
-	@Column(nullable = false)
-	private Collection<Permission> permissions;
-
-	public Boolean addPermission(Permission permission){
-		if(this.permissions == null){
-			this.permissions = new ArrayList<>();
-		}
-
-		return this.permissions.add(permission);
-	}
-
-	public Boolean deletePermission(Permission permission){
-		if(this.permissions == null)
-			return false;
-
-		return this.permissions.remove(permission);
-	}
+    public Content(Long createdBy){
+        super(createdBy);
+    }
 }
