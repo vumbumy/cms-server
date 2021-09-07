@@ -1,4 +1,4 @@
-# CMS
+# CMS (Server)
 ### Content Management Service
 
 1. 사용자의 그룹 및 권한에 따른 컨텐츠 관리 서비스
